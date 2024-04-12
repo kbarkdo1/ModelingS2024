@@ -1,0 +1,5 @@
+
+generations = [0, 1]
+for i in range(2:11):
+    res = (1+q)
+    generations.append()

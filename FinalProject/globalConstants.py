@@ -1,0 +1,7 @@
+CMAX = 50
+
+TMAX = 40
+TMIN = 20
+PMAX = 0.5
+ALPHA = 0.5
+SIGMA = 1
