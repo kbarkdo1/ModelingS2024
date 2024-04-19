@@ -6,26 +6,32 @@ import math as m
 
 # differential equations
 
-def W_i_dt(netState, t, flowNum):
+def w_i_dt(netState, t, flowNum):
 
-    R_i_t = netState.getRtt(t)
-    R_i_former = netState.getRtt(t-R_i_t)
-    W_i_t = netState.routers[flowNum.getW(t)]
-    W_i_former = netState.routers[flowNum.getW( - R_i_t)]
+    R_i_t = netState.getRtt(flowNum, t)
+
+    R_i_former = netState.getRtt(flowNum, t-R_i_t)
+    W_i_t = netState.flows[flowNum].getW(t)
+    W_i_former = netState.flows[flowNum].getW( t- R_i_t)
     dropProb_former = netState.getProbDrop(t-R_i_t)
 
     return 1 / R_i_t - dropProb_former * (W_i_t * W_i_former) / (2 * R_i_former) 
 
-def q_dt(netState)
+def q_dt(netState, t):
     ratioSum = 0
-    for f in netState.flows:
-        ratioSum += f.getW(t) / f.getRtt(t)
+    for flowNum in range(len(netState.flows)):
+        f = netState.flows[flowNum]
+        ratioSum += f.getW(t) / netState.getRtt(flowNum, t)
     
     return -netState.C + ratioSum
 
 def x_dt(netState, alpha, sigma):
-    c1 = m.log(1-alpha)/sigma * netState.x - m.log(1-alpha)/sigma * netState.getCurQ()
-
+    # print(m.log(1-alpha)/sigma)
+    # return m.log(1-alpha)/sigma * netState.x - m.log(1-alpha)/sigma * netState.getCurQ()
+    K = -m.log(1-alpha)/sigma
+    print(K)
+    # K = 1.0000500033334732
+    return - K  * netState.x + K * netState.getCurQ()
 
 # helper equations
 def rtt(q, C, T_prop):
